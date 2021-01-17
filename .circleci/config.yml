@@ -91,7 +91,8 @@ workflows:
           context: orb-publishing
           add-pr-comment: false
           fail-if-semver-not-indicated: true
-          publish-version-tag: false
+          publish-version-tag: true
+          ssh-fingerprints: "a6:94:0e:3a:08:55:19:c8:5f:7d:de:3a:8f:e8:d3:a1"
           requires:
             - integration-test-1
           filters:
