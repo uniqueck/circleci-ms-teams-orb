@@ -4,7 +4,7 @@ parameters:
 
   webhook_url:
     type: string
-    default: ${MS_TEAMS_WEBHOOK_URL}
+    default: "${MS_TEAMS_WEBHOOK_URL}"
     description: >
       Enter either your webhook url here or use the CircleCI UI to add your
       webhook url under the 'MS_TEAMS_WEBHOOK_URL' environment variable
@@ -31,9 +31,10 @@ parameters:
 steps:
   - run:
       environment:
-        PARAM_WEBHOOK_URL: << parameters.webhook_url >>
-        PARAM_TITLE: << parameters.title >>
-        PARAM_TEXT: << parameters.text >>
-        PARAM_SUMMARY: << parameters.summary >>
+        PARAM_WEBHOOK_URL: <<parameters.webhook_url>>
+        PARAM_TITLE: <<parameters.title>>
+        PARAM_TEXT: <<parameters.text>>
+        PARAM_SUMMARY: <<parameters.summary>>
+      name: "MS Teams send message"
       command: <<include(scripts/send-message.sh)>>
-      when: << parameters.when >>
+      when: <<parameters.when>>
