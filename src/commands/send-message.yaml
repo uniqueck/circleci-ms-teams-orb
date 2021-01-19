@@ -28,50 +28,12 @@ parameters:
     type: string
     default: "always"
 
-  only_for_branches:
-    type: string
-    default: ""
-    description: >
-      If set, a comma-separated list of branches for which to send
-      notifications. No spaces.
-
 steps:
-
   - run:
-      name: Provide error if curl is not installed.
-      command: |
-        which curl > /dev/null; echo $? | grep -q '1' && echo curl not installed  && exit 1
-
-  - run:
-      name: Provide error if jq is not installed.
-      command: |
-        which jq > /dev/null; echo $? | grep -q '1' && echo jq not installed && exit 1
-
-  - run:
-      name: Provide error if non-bash shell
-      command: |
-        if [ ! -x /bin/bash ]; then
-          echo Bash not installed.
-          exit 1
-        fi
-
-  - run:
-      name: Provide error if webhook_url not provided
-      command: |
-        if [ -z "<< parameters.webhook_url >>" ]; then
-          echo "No MS_TEAMS_WEBHOOK_URL provided".
-          echo "Please input your MS_TEAMS_WEBHOOK_URL value either in the settings for this project, or as a parameter for this orb."
-          exit 1
-        fi
-
-  - run:
-      name: MS Teams - sending message
-      shell: /bin/bash
+      environment:
+        PARAM_WEBHOOK_URL: << parameters.webhook_url >>
+        PARAM_TITLE: << parameters.title >>
+        PARAM_TEXT: << parameters.text >>
+        PARAM_SUMMARY: << parameters.summary >>
+      command: <<include(scripts/send-message.sh)>>
       when: << parameters.when >>
-      command: |
-        curl -H "Content-Type: application/json" \
-          -X POST \
-          -d "{ \"title\": \"<< parameters.title >>\", \
-                \"summary\": \"<< parameters.summary >>\", \
-                \"text\": \"<< parameters.text >>\" }" \
-          << parameters.webhook_url >>
